@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /administrator.html
+Disallow: /trainer.html
+Disallow: /billing.html
+Disallow: /onboarding.html
+Disallow: /invite.html
