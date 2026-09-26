@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en-AU"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#111a17"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="description" content="A local-first 52-week strength, mobility and movement companion with workout timers."><title>Human Movement OS · De-Omega-Point</title>
+<link rel="stylesheet" href="styles.css">
+</head><body>
+<a class="skip-link" href="#app">Skip to main content</a>
+<div id="storage-warning" class="data-warning" role="alert" hidden></div>
+<aside class="sidebar" aria-label="Main navigation"><div class="brand"><div class="brand-name">DE-OMEGA-POINT</div><div class="brand-title">Human<br>Movement OS<span class="accent">.</span></div><div class="brand-sub">TRAIN FOR LIFE.</div></div><nav id="nav-desktop"></nav><div class="sidebar-bottom"><div class="pill green"><span class="dot"></span> LIVE-READY</div><p class="privacy-line" style="margin-top:14px">Your body. Your pace.<br>Your account syncs securely when connected.</p><p class="tiny muted" style="margin-bottom:0">FOUNDATIONS → LIFETIME</p></div></aside>
+<div class="shell"><header class="topbar"><div class="context">Movement / <span id="context-title">Today</span></div><div class="mobile-brand">DE-OMEGA-POINT<b>Human Movement OS.</b></div><div class="toptools"><span class="pill"><span class="dot"></span><span id="connection">Local-first</span></span><button class="iconbtn" data-action="nav" data-view="library" aria-label="Open movement library"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h6l3 2 3-2h6v16h-6l-3 1-3-1H3zM12 6v15"/></svg></button><button class="iconbtn" id="sound-top" data-action="toggle-sound" aria-label="Enable sound"></button><button class="iconbtn" data-action="nav" data-view="settings" aria-label="Open settings"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3"/><circle cx="16" cy="17" r="3"/></svg></button></div></header><main class="main" id="app" tabindex="-1"></main></div>
+<nav class="mobile-nav" id="nav-mobile" aria-label="Main navigation"></nav>
+<dialog id="modal" aria-label="Movement OS dialog"><div id="modal-content"></div></dialog>
+<input id="import-file" type="file" accept="application/json,.json" aria-label="Import Movement OS backup">
+<div class="toast" id="toast" role="status" hidden></div><div class="screen-reader" id="announcer" aria-live="polite"></div>
+<noscript><div style="padding:40px;font:18px system-ui">Human Movement OS needs JavaScript for workouts and timers. Open the HTML in a full browser rather than a file preview. No login or connection is needed for the standalone file.</div></noscript>
+<script>window.MOVEMENT_STANDALONE=false;</script>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-adapter.js"></script>
+<script src="omega-runtime.js"></script>
+<script src="transformers.js"></script>
+<script src="brain.js"></script>
+<script src="programme.js"></script>
+<script src="timer-engine.js"></script>
+<script src="live-bootstrap.js"></script>
+<script src="client-copilot.js"></script>
+</body></html>
