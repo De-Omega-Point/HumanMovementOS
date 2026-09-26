@@ -18,3 +18,17 @@ h1,h2,h3,.brand h1{font-family:"Space Grotesk",Inter,ui-sans-serif,system-ui,san
 .intel-list{display:grid;gap:8px}.intel-item{width:100%;display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;text-align:left;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px;color:inherit;cursor:pointer}.intel-item:hover{border-color:rgba(116,255,167,.35)}.intel-item small{display:block;color:var(--muted);margin-top:2px}.intel-dot{width:10px;height:10px;border-radius:50%;background:#76ffa9}.sev-high .intel-dot{background:#ff8576}.sev-medium .intel-dot{background:#ffd166}.sev-positive .intel-dot{background:#76ffa9}.intel-empty{color:var(--muted);padding:10px 0}
 .ai-review{margin-top:16px;padding:16px;border-radius:16px;background:rgba(116,255,167,.055);border:1px solid rgba(116,255,167,.18)}.ai-head{display:flex;justify-content:space-between;gap:8px;align-items:center;color:var(--muted);font-size:.8rem}.ai-review h4{margin:12px 0 6px}.ai-review ul{padding-left:20px}.ai-review li{margin:8px 0}.ai-review li small{color:var(--muted);margin-left:4px}.ai-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 @media(max-width:700px){.intel-head{display:block}.intel-head .ai-chip{margin-top:8px}.intel-item{grid-template-columns:auto 1fr}.intel-item strong{grid-column:2}}
+
+
+/* HMO ADMIN INTERACTION LAYER v1 */
+@keyframes hmo-rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes hmo-pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.02);opacity:.92}}
+.card,.btn,.nav button,.rolepill,.metric,.activity,.intel-item,.field{transition:transform .18s ease,border-color .18s ease,background-color .18s ease,box-shadow .18s ease,opacity .18s ease}
+main>.card,main>.metricgrid,main>.layout,main>.split2{animation:hmo-rise .3s ease both}
+.btn:active,.nav button:active{transform:scale(.98)}
+.metric:hover,.activity:hover,.intel-item:hover{transform:translateY(-2px);border-color:rgba(57,255,20,.18)}
+.nav button.active{box-shadow:inset 3px 0 0 var(--dop-neon)}
+.ai-chip,.mode .dot{animation:hmo-pulse 2.7s ease-in-out infinite}
+.field:focus{outline:none;border-color:var(--dop-neon);box-shadow:0 0 0 3px rgba(57,255,20,.09)}
+@media (hover:hover) and (pointer:fine){.btn:hover,.nav button:hover{transform:translateY(-1px)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
