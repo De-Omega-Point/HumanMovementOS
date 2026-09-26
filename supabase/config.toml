@@ -1,2 +1,5 @@
 [functions.stripe-webhook]
 verify_jwt = false
+
+[functions.administrator-account-action]
+verify_jwt = true
