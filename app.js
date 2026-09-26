@@ -60,15 +60,11 @@ function persist(){if(state.active)state.active.clock=clock.snapshot();state.fre
   if(!storageOK)return false;try{localStorage.setItem(KEY,JSON.stringify(state));return true;}catch(e){storageOK=false;storageError='Browser storage is unavailable or full. New work is kept in this tab only. Export a backup before closing.';updateStorageWarning();return false;}}
 function toast(message){const t=$('#toast');t.textContent=message;t.hidden=false;clearTimeout(toastJob);toastJob=setTimeout(()=>t.hidden=true,5200);}
 function hmoFeedback(message,celebrate=false){
-  if(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return toast(message);
-  const old=document.querySelector('.hmo-feedback');if(old)old.remove();
-  const el=document.createElement('div');el.className='hmo-feedback';el.textContent=message;document.body.appendChild(el);
-  if(celebrate){
-    const layer=document.createElement('div');layer.className='hmo-confetti';
-    for(let i=0;i<18;i++){const p=document.createElement('i');p.style.left=(15+Math.random()*70)+'%';p.style.top=(8+Math.random()*12)+'%';p.style.animationDelay=(Math.random()*.18)+'s';p.style.transform='rotate('+(Math.random()*180)+'deg)';layer.appendChild(p)}
-    document.body.appendChild(layer);setTimeout(()=>layer.remove(),1100);
-  }
-  setTimeout(()=>el.remove(),1200);
+ if(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return toast(message);
+ document.querySelector('.hmo-feedback')?.remove();
+ const el=document.createElement('div');el.className='hmo-feedback';el.textContent=message;document.body.appendChild(el);
+ if(celebrate){const layer=document.createElement('div');layer.className='hmo-confetti';for(let i=0;i<20;i++){const bit=document.createElement('i');bit.style.left=(13+Math.random()*74)+'%';bit.style.top=(6+Math.random()*14)+'%';bit.style.animationDelay=(Math.random()*.18)+'s';layer.appendChild(bit)}document.body.appendChild(layer);setTimeout(()=>layer.remove(),1100)}
+ setTimeout(()=>el.remove(),1250);
 }
 function announce(s){$('#announcer').textContent=s;}
 function updateStorageWarning(){const b=$('#storage-warning');b.hidden=storageOK;b.textContent=storageError;}
