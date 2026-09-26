@@ -1,0 +1,9 @@
+.DS_Store
+.env
+.env.*
+!config.example.js
+config.local.js
+*.log
+node_modules/
+coverage/
+.tmp/
