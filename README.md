@@ -4,7 +4,7 @@
 
 ## Release status
 
-This repository contains the **v1.0 release candidate**. Core programme generation and the local AI kit are tested; live Supabase and Stripe acceptance testing is still required before taking real payments or onboarding production clients.
+This repository contains the **v1.1 release candidate**. Core programme generation and the local AI kit are tested; live Supabase and Stripe acceptance testing is still required before taking real payments or onboarding production clients.
 
 ## Three roles
 
@@ -50,3 +50,8 @@ Human Movement OS is a coaching and exercise-management product, not a diagnosti
 - `QA-v0.8.md`
 
 Copyright © De-Omega-Point. All rights reserved.
+
+
+## v1.1 administrator hardening
+
+Managed clients are restricted to Today, Timer and Progress. Administrators gain account suspension/reactivation, trainer transfer, onboarding/programme reset, invite revocation, archive, permanent client deletion with subscription guard, and an audit trail.
