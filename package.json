@@ -1,0 +1,11 @@
+{
+  "name": "human-movement-os",
+  "version": "1.0.0",
+  "private": true,
+  "description": "De-Omega-Point Human Movement OS trainer-client platform",
+  "scripts": {
+    "test": "node tests/unit.test.cjs && node tests/ai-kit.test.cjs",
+    "test:unit": "node tests/unit.test.cjs",
+    "test:ai": "node tests/ai-kit.test.cjs"
+  }
+}
