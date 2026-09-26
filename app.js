@@ -69,9 +69,12 @@ function plan(n=state.week,day=state.day){return P.makeWorkout(n,day,opts());}
 function totalStats(){return {sessions:state.history.filter(h=>h.completed&&h.type==='main').length,sets:state.history.reduce((n,h)=>n+h.logs.filter(l=>!['Warm-up','Cool-down','Flexibility','Mobility'].includes(l.block)).length,0),minutes:Math.round(state.history.reduce((n,h)=>n+h.duration,0)/60)};}
 function recentStats(){const cutoff=Date.now()-7*86400000;return state.history.filter(h=>Date.parse(h.date)>=cutoff);}
 function phaseLabel(n){return P.PHASES[P.week(n).phase-1];}
+function managedClient(){return !!window.HMO_CLIENT_LOCKED||!!assignedClient;}
 function renderNav(){const titles={today:'Today',programme:'Programme',timer:'Workout timer',library:'Movement library',progress:'Your progress',settings:'Settings and evidence'};
-  $('#nav-desktop').innerHTML=[['today','home','Today'],['programme','plan','Programme'],['timer','timer','Workout timer'],['library','library','Movement library'],['progress','progress','Progress'],['settings','settings','Settings']].map(([id,ic,text])=>`<button class="nav-item ${view===id?'active':''} ${id==='settings'?'nav-gap':''}" data-action="nav" data-view="${id}" ${view===id?'aria-current="page"':''}>${I(ic)}${text}</button>`).join('');
-  $('#nav-mobile').innerHTML=[['today','home','Today'],['programme','plan','Plan'],['timer','timer','Timer'],['progress','progress','Progress']].map(([id,ic,text])=>`<button class="${view===id?'active':''}" data-action="nav" data-view="${id}" ${view===id?'aria-current="page"':''}>${I(ic)}${text}</button>`).join('');
+  const desk=managedClient()?[['today','home','Today'],['timer','timer','Workout timer'],['progress','progress','Progress']]:[['today','home','Today'],['programme','plan','Programme'],['timer','timer','Workout timer'],['library','library','Movement library'],['progress','progress','Progress'],['settings','settings','Settings']];
+  $('#nav-desktop').innerHTML=desk.map(([id,ic,text])=>`<button class="nav-item ${view===id?'active':''} ${id==='settings'?'nav-gap':''}" data-action="nav" data-view="${id}" ${view===id?'aria-current="page"':''}>${I(ic)}${text}</button>`).join('');
+  const mob=managedClient()?[['today','home','Today'],['timer','timer','Timer'],['progress','progress','Progress']]:[['today','home','Today'],['programme','plan','Plan'],['timer','timer','Timer'],['progress','progress','Progress']];
+  $('#nav-mobile').innerHTML=mob.map(([id,ic,text])=>`<button class="${view===id?'active':''}" data-action="nav" data-view="${id}" ${view===id?'aria-current="page"':''}>${I(ic)}${text}</button>`).join('');
   $('#context-title').textContent=titles[view]||'Workout';$('#sound-top').innerHTML=I(state.settings.sound?'sound':'mute');$('#sound-top').setAttribute('aria-label',state.settings.sound?'Turn sound off':'Turn sound on');
   $('#connection').textContent=location.protocol==='file:'?'Local file':navigator.onLine?'Local-first':'Offline';document.body.classList.toggle('large-type',state.settings.large);updateStorageWarning();
 }
@@ -219,14 +222,14 @@ document.addEventListener('click',async ev=>{
  const b=ev.target.closest('[data-action]');if(!b||b.disabled)return;const action=b.dataset.action;
  if(['complete-set','save-session','start-set','confirm-skip','confirm-import','save-aerobic','save-benchmark'].includes(action)){if(lastAction===action&&Date.now()-lastActionAt<450)return;lastAction=action;lastActionAt=Date.now();}
  switch(action){
- case 'nav':navigate(b.dataset.view);break;
+ case 'nav':if(managedClient()&&['programme','library','settings'].includes(b.dataset.view)){toast('Your trainer manages programme and exercise-library access.');navigate('today');break;}navigate(b.dataset.view);break;
  case 'close-modal':closeModal();break;
  case 'day':state.day=b.dataset.day;persist();render();break;
  case 'readiness':state.readiness=b.dataset.value;persist();render();break;
- case 'phase':selectedPhase=Number(b.dataset.id);previewWeek=P.PHASES[selectedPhase-1].start;render();break;
- case 'preview-week':previewWeek=Number(b.dataset.number);render();break;
+ case 'phase':if(managedClient()){toast('Your trainer controls programme progression.');break;}selectedPhase=Number(b.dataset.id);previewWeek=P.PHASES[selectedPhase-1].start;render();break;
+ case 'preview-week':if(managedClient()){toast('Your trainer controls programme progression.');break;}previewWeek=Number(b.dataset.number);render();break;
  case 'use-week':useWeek(Number(b.dataset.number));break;
- case 'confirm-week':{const n=Number(b.dataset.number);if(n>state.week&&!$('#week-ack')?.checked){toast('Confirm that you will keep appropriate variations.');break;}state.week=n;state.readiness='ready';state.day='mon';previewWeek=n;selectedPhase=P.week(n).phase;persist();closeModal();navigate('today');break;}
+ case 'confirm-week':{if(managedClient()){toast('Your trainer controls programme progression.');closeModal();navigate('today');break;}const n=Number(b.dataset.number);if(n>state.week&&!$('#week-ack')?.checked){toast('Confirm that you will keep appropriate variations.');break;}state.week=n;state.readiness='ready';state.day='mon';previewWeek=n;selectedPhase=P.week(n).phase;persist();closeModal();navigate('today');break;}
  case 'programme-day':showPreview(Number(b.dataset.number),b.dataset.day);break;
  case 'preview':showPreview();break;
  case 'exercise':showExercise(b.dataset.id);break;
