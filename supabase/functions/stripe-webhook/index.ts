@@ -1,0 +1,15 @@
+import Stripe from 'npm:stripe@22';
+import {stripe,admin,json} from '../_shared/billing.ts';
+const cryptoProvider=Stripe.createSubtleCryptoProvider();
+const ts=(n?:number|null)=>n?new Date(n*1000).toISOString():null;
+async function already(id:string,type:string){const {data}=await admin.from('billing_events').select('stripe_event_id').eq('stripe_event_id',id).maybeSingle();if(data)return true;await admin.from('billing_events').insert({stripe_event_id:id,event_type:type});return false;}
+async function clientForCustomer(customer:string){const {data}=await admin.from('billing_customers').select('profile_id').eq('stripe_customer_id',customer).maybeSingle();return data?.profile_id||null;}
+async function syncSubscription(sub:any){const clientId=sub.metadata?.hmo_client_id||await clientForCustomer(String(sub.customer));if(!clientId)return;let planId=sub.metadata?.hmo_plan_id||null;if(!planId){const priceId=sub.items?.data?.[0]?.price?.id; if(priceId){const {data:p}=await admin.from('billing_plans').select('id').eq('stripe_price_id',priceId).maybeSingle();planId=p?.id||null;}}
+ await admin.from('billing_subscriptions').upsert({client_id:clientId,plan_id:planId,stripe_subscription_id:sub.id,status:sub.status,current_period_start:ts(sub.current_period_start),current_period_end:ts(sub.current_period_end),cancel_at_period_end:!!sub.cancel_at_period_end,trial_end:ts(sub.trial_end),updated_at:new Date().toISOString()},{onConflict:'stripe_subscription_id'});
+}
+Deno.serve(async req=>{const sig=req.headers.get('stripe-signature')||'';const body=await req.text();let event:any;try{event=await stripe.webhooks.constructEventAsync(body,sig,Deno.env.get('STRIPE_WEBHOOK_SECRET')!,undefined,cryptoProvider);}catch(e){return new Response('bad signature',{status:400});}try{if(await already(event.id,event.type))return json({received:true,duplicate:true});const o:any=event.data.object;
+ if(event.type.startsWith('customer.subscription.')) await syncSubscription(o);
+ if(event.type==='checkout.session.completed'&&o.customer&&o.client_reference_id) await admin.from('billing_customers').upsert({profile_id:o.client_reference_id,stripe_customer_id:String(o.customer),updated_at:new Date().toISOString()},{onConflict:'profile_id'});
+ if(event.type==='invoice.paid'||event.type==='invoice.payment_failed'){const clientId=await clientForCustomer(String(o.customer));if(clientId)await admin.from('billing_payments').upsert({client_id:clientId,stripe_invoice_id:o.id,stripe_payment_intent_id:typeof o.payment_intent==='string'?o.payment_intent:o.payment_intent?.id||null,amount_paid_cents:o.amount_paid||0,currency:o.currency||'aud',status:event.type==='invoice.paid'?'paid':'failed',paid_at:event.type==='invoice.paid'?new Date().toISOString():null,updated_at:new Date().toISOString()},{onConflict:'stripe_invoice_id'});}
+ if(event.type==='charge.refunded'&&o.payment_intent){await admin.from('billing_payments').update({refunded_cents:o.amount_refunded||0,updated_at:new Date().toISOString()}).eq('stripe_payment_intent_id',String(o.payment_intent));}
+ return json({received:true});}catch(e){console.error(e);return json({error:'webhook_processing_failed'},500)}});
