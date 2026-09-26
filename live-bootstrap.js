@@ -6,6 +6,8 @@
     const me=await HMOBackend.me();
     if(me?.role==='administrator'){location.replace('administrator.html');return;}
     if(me?.role==='trainer'){location.replace('trainer.html');return;}
+    if(me?.account_status==='suspended'){document.body.innerHTML='<main style="font:16px system-ui;padding:32px;max-width:720px;margin:auto"><h1>Account suspended</h1><p>Your account is currently suspended. Contact your trainer or platform administrator.</p><p><a href="account.html">Account</a></p></main>';return;}
+    window.HMO_CLIENT_LOCKED=true;document.body.classList.add('client-locked');
     const ob=await HMOBackend.myOnboarding();
     if(!ob||ob.status!=='approved'){location.replace('onboarding.html');return;}
     const a=await HMOBackend.myAssignment();
