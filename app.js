@@ -59,6 +59,17 @@ if(state.active){state.active.variations=state.active.variations||{};state.activ
 function persist(){if(state.active)state.active.clock=clock.snapshot();state.free={...freeConfig,clock:freeClock.snapshot()};
   if(!storageOK)return false;try{localStorage.setItem(KEY,JSON.stringify(state));return true;}catch(e){storageOK=false;storageError='Browser storage is unavailable or full. New work is kept in this tab only. Export a backup before closing.';updateStorageWarning();return false;}}
 function toast(message){const t=$('#toast');t.textContent=message;t.hidden=false;clearTimeout(toastJob);toastJob=setTimeout(()=>t.hidden=true,5200);}
+function hmoFeedback(message,celebrate=false){
+  if(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return toast(message);
+  const old=document.querySelector('.hmo-feedback');if(old)old.remove();
+  const el=document.createElement('div');el.className='hmo-feedback';el.textContent=message;document.body.appendChild(el);
+  if(celebrate){
+    const layer=document.createElement('div');layer.className='hmo-confetti';
+    for(let i=0;i<18;i++){const p=document.createElement('i');p.style.left=(15+Math.random()*70)+'%';p.style.top=(8+Math.random()*12)+'%';p.style.animationDelay=(Math.random()*.18)+'s';p.style.transform='rotate('+(Math.random()*180)+'deg)';layer.appendChild(p)}
+    document.body.appendChild(layer);setTimeout(()=>layer.remove(),1100);
+  }
+  setTimeout(()=>el.remove(),1200);
+}
 function announce(s){$('#announcer').textContent=s;}
 function updateStorageWarning(){const b=$('#storage-warning');b.hidden=storageOK;b.textContent=storageError;}
 function modal(title,body,actions=''){const d=$('#modal');$('#modal-content').innerHTML=`<div class="dialog-body"><div class="dialog-header"><h2 id="dialog-title">${title}</h2><button class="iconbtn" data-action="close-modal" aria-label="Close dialog">${I('close')}</button></div>${body}${actions?`<div class="dialog-actions">${actions}</div>`:''}</div>`;d.setAttribute('aria-labelledby','dialog-title');if(!d.open)d.showModal();}
