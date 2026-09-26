@@ -1,0 +1,7 @@
+/* Trainer-facing UI helpers for v1.0 */
+window.HMOIntelligenceUI={
+  esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));},
+  queue(clients){return HMOBrain.attentionQueue(clients)},
+  queueHTML(clients){const esc=this.esc;const q=this.queue(clients);if(!q.length)return '<div class="intel-empty">No priority signals right now. Keep normal coaching review cadence.</div>';return `<div class="intel-list">${q.slice(0,8).map(x=>{const s=x.signals[0];return `<button class="intel-item sev-${esc(s.severity)}" data-intel-client="${esc(x.clientId)}"><span class="intel-dot"></span><span><b>${esc(x.name)}</b><small>${esc(s.title)} · ${esc(s.verification.status)}</small></span><strong>${esc(s.severity==='high'?'Review':s.severity==='medium'?'Check':'Progress')}</strong></button>`}).join('')}</div>`},
+  reviewHTML(c){const r=HMOBrain.weeklyReview(c),esc=this.esc;return `<div class="ai-review"><div class="ai-head"><span class="ai-chip">LOCAL AI KIT</span><span>Trainer approval required</span></div><h4>${esc(r.client)} · Weekly review draft</h4><p>${esc(r.summary)}</p>${r.signals.length?`<ul>${r.signals.map(s=>`<li><b>${esc(s.title)}</b>: ${esc(s.detail)} <small>${esc(s.verification.status)}</small></li>`).join('')}</ul>`:''}<p><b>Suggested action:</b> ${esc(r.suggestedAction)}</p><div class="ai-actions"><button class="btn primary" data-action="approve-ai-review">Approve as note</button><button class="btn" data-action="dismiss-ai-review">Dismiss</button></div></div>`}
+};
