@@ -55,3 +55,7 @@ Copyright © De-Omega-Point. All rights reserved.
 ## v1.1 administrator hardening
 
 Managed clients are restricted to Today, Timer and Progress. Administrators gain account suspension/reactivation, trainer transfer, onboarding/programme reset, invite revocation, archive, permanent client deletion with subscription guard, and an audit trail.
+
+## Brand
+
+Human Movement OS is a De-Omega-Point product. See `BRAND.md` for the locked parent-brand system and official-logo rules.
