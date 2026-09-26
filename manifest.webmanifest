@@ -1,12 +1,12 @@
 {
   "id": "./",
-  "name": "Human Movement OS \u00b7 De-Omega-Point",
+  "name": "De-Omega-Point · Human Movement OS",
   "short_name": "Movement OS",
-  "description": "A trainer-client strength, mobility and movement platform with workout timers and coaching intelligence.",
+  "description": "Human-value-centric movement coaching and training by De-Omega-Point.",
   "lang": "en-AU",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#0e1413",
-  "theme_color": "#111a17"
+  "background_color": "#07110D",
+  "theme_color": "#07110D"
 }
